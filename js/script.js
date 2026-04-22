@@ -69,6 +69,7 @@ const typingWords = ['AI Engineer', 'Developer', 'Researcher'];
 let wordIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
+const cursorGlow = document.querySelector('.cursor-glow');
 
 function typeEffect() {
     if (!typedText) return;
@@ -98,3 +99,26 @@ function typeEffect() {
 }
 
 typeEffect();
+
+if (cursorGlow) {
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let glowX = mouseX;
+    let glowY = mouseY;
+
+    window.addEventListener('mousemove', (event) => {
+        mouseX = event.clientX;
+        mouseY = event.clientY;
+    });
+
+    function animateGlow() {
+        // Ease the glow toward the cursor for a soft trailing effect.
+        glowX += (mouseX - glowX) * 0.14;
+        glowY += (mouseY - glowY) * 0.14;
+        cursorGlow.style.left = `${glowX}px`;
+        cursorGlow.style.top = `${glowY}px`;
+        requestAnimationFrame(animateGlow);
+    }
+
+    animateGlow();
+}

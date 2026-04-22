@@ -30,6 +30,21 @@ body {
     color: var(--text-color);
 }
 
+.cursor-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 22rem;
+    height: 22rem;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+    opacity: .45;
+    background: radial-gradient(circle, rgba(0, 238, 255, 0.32) 0%, rgba(0, 238, 255, 0.14) 35%, rgba(0, 238, 255, 0) 72%);
+    filter: blur(22px);
+    transform: translate(-50%, -50%);
+}
+
 section {
     min-height: 100vh;
     padding: 10rem 9% 2rem;
@@ -89,6 +104,19 @@ section {
 
 .home-img img {
     width: 45vw;
+    animation: floatImage 4s ease-in-out infinite;
+}
+
+@keyframes floatImage {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-2.4rem);
+    }
+    100% {
+        transform: translateY(0);
+    }
 }
 .home-content h3 {
     font-size: 3.2rem;
@@ -511,6 +539,11 @@ span {
     }
     .home-content h1 {
         font-size: 5rem;
+    }
+
+    .cursor-glow {
+        width: 16rem;
+        height: 16rem;
     }
     .home-img img {
         width: 70vw;
