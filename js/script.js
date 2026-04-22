@@ -63,3 +63,38 @@ function sendMail(event){
             alert("Oops! Something went wrong.");
         });
 }
+
+const typedText = document.querySelector('#typed-text');
+const typingWords = ['AI Engineer', 'Developer', 'Researcher'];
+let wordIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+
+function typeEffect() {
+    if (!typedText) return;
+
+    const currentWord = typingWords[wordIndex];
+
+    if (isDeleting) {
+        charIndex--;
+    } else {
+        charIndex++;
+    }
+
+    typedText.textContent = currentWord.substring(0, charIndex);
+
+    let typingSpeed = isDeleting ? 80 : 140;
+
+    if (!isDeleting && charIndex === currentWord.length) {
+        typingSpeed = 1200;
+        isDeleting = true;
+    } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        wordIndex = (wordIndex + 1) % typingWords.length;
+        typingSpeed = 250;
+    }
+
+    setTimeout(typeEffect, typingSpeed);
+}
+
+typeEffect();

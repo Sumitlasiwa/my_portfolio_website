@@ -103,6 +103,12 @@ section {
 span {
     color: var(--main-color);
 }
+
+#typed-text {
+    display: inline-block;
+    min-width: 18ch;
+}
+
 .home-content h1 {
     font-size: 5.6rem;
     font-weight: 700;
