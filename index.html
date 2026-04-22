@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Portfolio Website | Sumit</title>
+
+    <!-- box icons-->
+     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+     <!-- custom css-->
+    <link rel="stylesheet" href="css/style.css">
+    <script type="text/javascript"
+            src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+    </script>
+    <script type="text/javascript">
+    (function(){
+        emailjs.init({
+            publicKey: "dms0Jdn-v-W9PN0xJ",
+        });
+    })();
+    </script>
+</head>
+
+<body>
+    <header class="header">
+        <a href="#" class="logo">Portfolio</a>
+        <i class='bx bx-menu' id="menu-icon"></i>
+        <nav class="navbar">
+            <a href="#home" class="active">Home</a>
+            <a href="#about">About</a>
+            <!-- <a href="#services">Services</a> -->
+            <a href="#skills">Skills</a>
+            <a href="#portfolio">Portfolio</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+
+    <!-- home section design-->
+     <section class="home" id="home">
+        <div class="home-content">
+            <h3>Hello, It's Me</h3>
+            <h1>Sumit Lasiwa</h1>
+            <h3>And I'm an <span>AI Engineer</span></h3>
+            <p>I’m an AI Engineer who loves transforming ideas into smart, data-driven applications. My interests lie in machine learning, NLP, and building practical AI systems that actually work in production.</p>
+
+            <div class="social-media">
+                <a href="https://www.facebook.com/sumit.lasiwa.7"><i class="bx bxl-facebook"></i></a>
+                <a href="https://www.instagram.com/sumitlasiwa/"><i class="bx bxl-instagram-alt"></i></a>
+                <a href="https://www.linkedin.com/in/sumit-lasiwa-30ab86346/"><i class="bx bxl-linkedin"></i></a>
+            </div>
+            <a href="My_CV (2026-04).pdf" class="btn">Download CV</a>
+        </div>
+
+        <div class="home-img">
+            <img src="images/home.png" alt="">
+        </div>
+     </section>
+
+
+     <!-- about section design -->
+     <section class="about" id="about">
+        <div class="about-img">
+            <img src="https://imgs.search.brave.com/Y_ZZm_NfawSbiIt9fSw-ltDd9i12PsY_K-S-SJ-0M2M/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNjcv/MDQ4LzIzOS9zbWFs/bC9teXN0ZXJpb3Vz/LWFuaW1lLXNhbXVy/YWktd2l0aC1rYXRh/bmEtb24tdHJhbnNw/YXJlbnQtYmFja2dy/b3VuZC1wbmcucG5n" alt="">
+        </div>
+
+        <div class="about-content">
+            <h2 class="heading">About <span>Me</span></h2>
+            <h3>AI Engineer</h3>
+            <p>
+            I am a Computer Engineering student passionate about AI, Machine Learning, and Web Development. 
+            I completed my schooling and +2 in Science, which built my foundation in logic and problem-solving. 
+            Currently, I am pursuing my Bachelor's degree in Computer Engineering, where I am learning and applying technologies like Python, SQL, and modern web frameworks through hands-on projects.
+            </p>
+            <a href="#" class="btn">Read More</a>
+        </div>
+
+     </section>
+
+     <!-- skills section design -->
+     <!-- <section class="services" id="services">
+        <h2 class="heading">My <span>Skills</span></h2>
+        <div class="services-container">
+            <div class="skill">
+            <h3>Python</h3>
+            <div class="bar"><span style="width: 85%;"></span></div>
+        </div>
+
+        <div class="skill">
+            <h3>Machine Learning</h3>
+            <div class="bar"><span style="width: 75%;"></span></div>
+        </div>
+
+        <div class="skill">
+            <h3>JavaScript</h3>
+            <div class="bar"><span style="width: 70%;"></span></div>
+        </div>
+
+        <div class="skill">
+            <h3>HTML & CSS</h3>
+            <div class="bar"><span style="width: 90%;"></span></div>
+        </div>
+
+        <div class="skill">
+            <h3>SQL</h3>
+            <div class="bar"><span style="width: 80%;"></span></div>
+        </div>
+
+        </div>
+     </section> -->
+
+  <section class="skills" id="skills">
+    <h2 class="heading">My <span>Skills</span></h2>
+    <div class="skills-container">
+
+        <div class="skill">
+            <h3>Python</h3>
+            <div class="bar">
+                <span style="width:85%;">85%</span>
+            </div>
+        </div>
+
+        <div class="skill">
+            <h3>Machine Learning</h3>
+            <div class="bar">
+                <span style="width:75%;">75%</span>
+            </div>
+        </div>
+
+        <div class="skill">
+            <h3>PyTorch</h3>
+            <div class="bar">
+                <span style="width:70%;">70%</span>
+            </div>
+        </div>
+
+        <div class="skill">
+            <h3>NLP</h3>
+            <div class="bar">
+                <span style="width:72%;">72%</span>
+            </div>
+        </div>
+
+        <div class="skill">
+            <h3>FastAPI</h3>
+            <div class="bar">
+                <span style="width:65%;">65%</span>
+            </div>
+        </div>
+
+        <div class="skill">
+            <h3>RAG / LangChain</h3>
+            <div class="bar">
+                <span style="width:68%;">68%</span>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+     <!-- portfolio section design -->
+      <section class="portfolio" id="portfolio">
+        <h2 class="heading">Latest <span>Project</span></h2>
+        <div class="portfolio-container">
+            <div class="portfolio-item">
+                <h4 class="portfolio-title">Nepali Grammatical Error Correction</h4>
+                <a class="portfolio-link" href="https://youtu.be/F-Kh33WXlsw">Watch Demo<i class='bx bx-link-external' ></i></a>
+                <a class="portfolio-link" href="https://github.com/Sumitlasiwa/Nepali_Grammatical_Error_Correction">github link<i class='bx bx-link-external' ></i></a>
+                
+                <div class="portfolio-box">
+                <img src="images/GEC.png" alt="">
+                <div class="portfolio-layer">
+                    <p>Nepali grammatical error correction system with transformer-based generation, pairwise reranking, and FastAPI deployment for correcting Nepali sentences.</p>
+                </div>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <h4 class="portfolio-title">Nepali image captioning</h4>
+                <a class="portfolio-link" href="https://youtu.be/5NIalzbmZhY">Watch Demo<i class='bx bx-link-external' ></i></a>
+                <a class="portfolio-link" href="https://github.com/Sumitlasiwa/Image_captioning_Nepali">github link<i class='bx bx-link-external' ></i></a>
+                <div class="portfolio-box">
+                <img src="images/ImageCap.png" alt="">
+                <div class="portfolio-layer">
+                    <p>generates captions in Nepali after user uploads image using DL(cnn+lstm+attention) with beamsearch encoding.</p>
+                </div>
+                </div>
+            </div>
+            <div class="portfolio-item">
+                <h4 class="portfolio-title">RAG chatbot</h4>
+                <a class="portfolio-link" href="https://github.com/Sumitlasiwa/RAG_chatbot">github link<i class='bx bx-link-external' ></i></a>
+                <div class="portfolio-box">
+                <img src="images/GEC.png" alt="">
+                <div class="portfolio-layer">
+                    <p>generates captions in Nepali after user uploads image using DL(cnn+lstm+attention) with beamsearch encoding.</p>
+                </div>
+                </div>
+            </div>
+            
+    
+        </div>
+      </section>
+
+      <!-- contact section design -->
+       <section class="contact" id="contact">
+        <h2 class="heading">Contact <span>Me!</span></h2>
+
+        <form>
+            <div class="input-box">
+                <input type="text" placeholder="Full Name">
+                <input type="email" placeholder="Email Address">
+            </div>
+            
+            <div class="input-box">
+                <input type="Number" placeholder="Mobile Number">
+                <input type="text" placeholder="Email Subject">
+            </div>
+            <textarea name="" id="" cols="30" rows="10" placeholder="Your Message"></textarea>
+            <!-- <input type="submit" value="Send Message" class="btn" onclick="sendMail()"> -->
+            <button type="submit" onclick="sendMail(event)" class="btn">Send</button>
+            
+        </form>
+       </section>
+
+       <!--  footer design-->
+         <footer class="footer">
+            <div class="footer-text">
+                <p>Copyright &copy; 2026 by Sumit | All Rights Reserved.</p>
+            </div>
+
+            <div class="footer-iconTop">
+                <a href="#home"><i class="bx bx-up-arrow-alt"></i></a>
+            </div>
+         </footer>
+    <script src="js/script.js"></script>
+</body>
+</html>
+
