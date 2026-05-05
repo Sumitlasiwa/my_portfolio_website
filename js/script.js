@@ -78,12 +78,16 @@ const chatClear = document.querySelector('#chat-clear');
 const chatForm = document.querySelector('#chat-form');
 const chatInput = document.querySelector('#chat-input');
 const chatMessages = document.querySelector('#chat-messages');
+const chatStatusDot = document.querySelector('#chat-status-dot');
+const chatStatusText = document.querySelector('#chat-status-text');
 // const CHAT_API_URL = 'http://127.0.0.1:8000/chats';
-const CHAT_API_URL = 'https://charges-shared-mat-roulette.trycloudflare.com/chats';
+const CHAT_API_URL = 'https://personal-chatbot-api-cdht.onrender.com/chats';
+const CHAT_HEALTH_URL = new URL('/health', CHAT_API_URL).toString();
 const CHAT_STORAGE_KEY = 'portfolio_chat_messages';
 const CHAT_USER_ID_KEY = 'portfolio_chat_user_id';
 const legacyBotGreeting = 'Hi, I can help visitors learn about your work. Hook me to your API later and I will become fully functional.';
 const defaultBotGreeting = "Hi, I'm Sumit's AI assistant. Ask me about his skills, projects, experience, or how he builds AI systems.";
+let chatStatusIntervalId = null;
 
 function getOrCreateChatUserId() {
     let userId = localStorage.getItem(CHAT_USER_ID_KEY);
@@ -163,6 +167,52 @@ function clearChatHistory() {
     const initialMessages = [{ sender: 'bot', text: defaultBotGreeting }];
     saveChatMessages(initialMessages);
     renderChatMessages(initialMessages);
+}
+
+function setChatStatus(state, label) {
+    if (!chatStatusDot || !chatStatusText) return;
+
+    chatStatusDot.classList.remove('online', 'offline', 'checking');
+    chatStatusDot.classList.add(state);
+    chatStatusText.textContent = label;
+}
+
+async function checkChatbotStatus() {
+    if (CHAT_API_URL === 'YOUR_API_ENDPOINT_HERE') {
+        setChatStatus('offline', 'API not configured');
+        return false;
+    }
+
+    setChatStatus('checking', 'Checking status...');
+
+    try {
+        const response = await fetch(CHAT_HEALTH_URL, {
+            method: 'GET'
+        });
+
+        if (!response.ok) {
+            throw new Error(`Health check failed with status ${response.status}`);
+        }
+
+        const data = await response.json();
+        const isOnline = data.status === 'ok';
+
+        setChatStatus(isOnline ? 'online' : 'offline', isOnline ? 'Online' : 'Offline');
+        return isOnline;
+    } catch (error) {
+        console.error('Chat health check failed:', error);
+        setChatStatus('offline', 'Offline');
+        return false;
+    }
+}
+
+function startChatStatusPolling() {
+    if (chatStatusIntervalId) {
+        clearInterval(chatStatusIntervalId);
+    }
+
+    checkChatbotStatus();
+    chatStatusIntervalId = window.setInterval(checkChatbotStatus, 15000);
 }
 
 async function getChatbotReply(query) {
@@ -358,6 +408,7 @@ if (chatForm) {
 }
 
 renderChatMessages(loadChatMessages());
+startChatStatusPolling();
 
 document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
