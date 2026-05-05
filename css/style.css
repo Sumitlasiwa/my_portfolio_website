@@ -324,89 +324,62 @@ span {
 .portfolio-item {
     display: flex;
     flex-direction: column;
-    gap: 1.2rem;
-    align-items: center;
+    gap: 1.6rem;
+    align-items: flex-start;
+    min-height: 100%;
+    padding: 2.6rem 2.2rem;
+    border: .1rem solid rgba(0, 238, 255, 0.18);
+    border-radius: 2rem;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+    box-shadow: 0 0 1.6rem rgba(0, 0, 0, 0.18);
+    transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+}
+
+.portfolio-item:hover {
+    transform: translateY(-.5rem);
+    border-color: rgba(0, 238, 255, 0.5);
+    box-shadow: 0 1.4rem 3rem rgba(0, 0, 0, 0.24);
 }
 
 .portfolio-title {
     font-size: 2rem;
-    text-align: center;
+    text-align: left;
+}
+
+.portfolio-description {
+    font-size: 1.5rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.78);
+}
+
+.portfolio-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .portfolio-link {
     display: inline-flex;
     align-items: center;
     gap: .6rem;
-    font-size: 1.5rem;
+    padding: .95rem 1.4rem;
+    border: .1rem solid rgba(0, 238, 255, 0.28);
+    border-radius: 999px;
+    background: rgba(0, 238, 255, 0.08);
+    font-size: 1.4rem;
     color: var(--main-color);
+    cursor: pointer;
     transition: .3s ease;
 }
 
 .portfolio-link:hover {
-    color: var(--text-color);
-}
-
-.portfolio-container .portfolio-box {
-    position: relative;
-    border-radius: 2rem;
-    box-shadow: 0 0 1rem var(--bg-color);
-    overflow: hidden;
-    display: flex;
-    width: 100%;
-}
-
-.portfolio-box img {
-    width: 100%;
-    transition: .5s ease;
-}
-
-.portfolio-box:hover img {
-    transform: scale(1.1);
-}
-.portfolio-box .portfolio-layer {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(rgba(0,0,0,.1), var(--main-color));
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    text-align: center;
-    padding: 0 4rem;
-    transform: translateY(100%);
-    transition:  .5s ease;
-}
-
-.portfolio-box:hover .portfolio-layer {
-    transform: translateY(0);
-}
-
-.portfolio-layer h4 {
-    font-size: 3rem;
-}
-
-
-.portfolio-layer p {
-    font-size: 1.6rem;
-    margin: .3rem 0 1rem;
-}
-
-.portfolio-layer a {
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    width: 5rem;
-    height: 5rem;
-    background: var(--text-color);
-    border-radius: 50%;
-}
-
-.portfolio-layer a i {
-    font-size: 2rem;
     color: var(--second-bg-color);
+    background: var(--main-color);
+    box-shadow: 0 0 1rem rgba(0, 238, 255, 0.28);
+}
+
+.portfolio-link i {
+    font-size: 1.8rem;
 }
 
 .contact h2 {
@@ -483,13 +456,12 @@ span {
 
 .chat-widget {
     position: fixed;
-    right: 2.4rem;
-    bottom: 2.4rem;
+    right: 3.2rem;
+    bottom: 3.2rem;
     z-index: 1000;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 1.4rem;
 }
 
 .chat-toggle {
@@ -525,6 +497,9 @@ span {
 }
 
 .chat-panel {
+    position: absolute;
+    right: 0;
+    bottom: calc(100% + 1.4rem);
     width: min(36rem, calc(100vw - 3.2rem));
     height: 48rem;
     display: flex;
@@ -894,8 +869,8 @@ span {
     }
 
     .chat-widget {
-        right: 1.6rem;
-        bottom: 1.6rem;
+        right: 1.8rem;
+        bottom: 1.8rem;
     }
 
     .chat-toggle span {
@@ -907,6 +882,12 @@ span {
         width: 6.2rem;
         height: 6.2rem;
         padding: 0;
+    }
+}
+
+@media (max-width: 620px) {
+    .portfolio-container {
+        grid-template-columns: 1fr;
     }
 }
 
