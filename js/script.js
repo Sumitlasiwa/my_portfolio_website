@@ -92,6 +92,7 @@ const CHAT_STATUS_POLL_INTERVAL = 30000;
 const CHAT_STATUS_FAILURE_THRESHOLD = 3;
 let chatStatusIntervalId = null;
 let failedChatHealthChecks = 0;
+let hasConfirmedChatOnline = false;
 
 function getOrCreateChatUserId() {
     let userId = localStorage.getItem(CHAT_USER_ID_KEY);
@@ -213,6 +214,7 @@ async function checkChatbotStatus() {
         const isOnline = !data || normalizedStatus === 'ok' || normalizedStatus === 'online' || normalizedStatus === 'healthy';
 
         failedChatHealthChecks = 0;
+        hasConfirmedChatOnline = isOnline;
         setChatStatus(isOnline ? 'online' : 'offline', isOnline ? 'Online' : 'Offline');
         return isOnline;
     } catch (error) {
@@ -220,8 +222,9 @@ async function checkChatbotStatus() {
         failedChatHealthChecks += 1;
 
         if (failedChatHealthChecks >= CHAT_STATUS_FAILURE_THRESHOLD) {
+            hasConfirmedChatOnline = false;
             setChatStatus('offline', 'Offline');
-        } else {
+        } else if (!hasConfirmedChatOnline) {
             setChatStatus('checking', 'Reconnecting...');
         }
 
@@ -262,6 +265,7 @@ async function getChatbotReply(query) {
 
     const data = await response.json();
     failedChatHealthChecks = 0;
+    hasConfirmedChatOnline = true;
     setChatStatus('online', 'Online');
 
     return data.reply || data.response || data.message || 'The assistant returned an empty response.';
