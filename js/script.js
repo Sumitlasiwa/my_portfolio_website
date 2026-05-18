@@ -90,9 +90,11 @@ const legacyBotGreeting = 'Hi, I can help visitors learn about your work. Hook m
 const defaultBotGreeting = "Hi, I'm Sumit's AI assistant. Ask me about his skills, projects, experience, or how he builds AI systems.";
 const CHAT_STATUS_POLL_INTERVAL = 30000;
 const CHAT_STATUS_FAILURE_THRESHOLD = 3;
+const CHAT_STATUS_ONLINE_GRACE_PERIOD = 5 * 60 * 1000;
 let chatStatusIntervalId = null;
 let failedChatHealthChecks = 0;
 let hasConfirmedChatOnline = false;
+let lastSuccessfulChatContactAt = 0;
 
 function getOrCreateChatUserId() {
     let userId = localStorage.getItem(CHAT_USER_ID_KEY);
@@ -182,14 +184,17 @@ function setChatStatus(state, label) {
     chatStatusText.textContent = label;
 }
 
+function markChatOnline() {
+    failedChatHealthChecks = 0;
+    hasConfirmedChatOnline = true;
+    lastSuccessfulChatContactAt = Date.now();
+    setChatStatus('online', 'Online');
+}
+
 async function checkChatbotStatus() {
     if (CHAT_API_URL === 'YOUR_API_ENDPOINT_HERE') {
         setChatStatus('offline', 'API not configured');
         return false;
-    }
-
-    if (failedChatHealthChecks === 0) {
-        setChatStatus('checking', 'Checking status...');
     }
 
     try {
@@ -213,19 +218,29 @@ async function checkChatbotStatus() {
         const normalizedStatus = String(data?.status || '').toLowerCase();
         const isOnline = !data || normalizedStatus === 'ok' || normalizedStatus === 'online' || normalizedStatus === 'healthy';
 
-        failedChatHealthChecks = 0;
-        hasConfirmedChatOnline = isOnline;
-        setChatStatus(isOnline ? 'online' : 'offline', isOnline ? 'Online' : 'Offline');
+        if (isOnline) {
+            markChatOnline();
+        } else {
+            hasConfirmedChatOnline = false;
+            setChatStatus('offline', 'Offline');
+        }
+
         return isOnline;
     } catch (error) {
         console.error('Chat health check failed:', error);
         failedChatHealthChecks += 1;
+        const withinOnlineGracePeriod = hasConfirmedChatOnline
+            && Date.now() - lastSuccessfulChatContactAt < CHAT_STATUS_ONLINE_GRACE_PERIOD;
 
-        if (failedChatHealthChecks >= CHAT_STATUS_FAILURE_THRESHOLD) {
+        if (withinOnlineGracePeriod) {
+            setChatStatus('online', 'Online');
+        } else if (failedChatHealthChecks >= CHAT_STATUS_FAILURE_THRESHOLD) {
             hasConfirmedChatOnline = false;
             setChatStatus('offline', 'Offline');
         } else if (!hasConfirmedChatOnline) {
-            setChatStatus('checking', 'Reconnecting...');
+            setChatStatus('offline', 'Offline');
+        } else {
+            setChatStatus('online', 'Online');
         }
 
         return false;
@@ -264,9 +279,7 @@ async function getChatbotReply(query) {
     }
 
     const data = await response.json();
-    failedChatHealthChecks = 0;
-    hasConfirmedChatOnline = true;
-    setChatStatus('online', 'Online');
+    markChatOnline();
 
     return data.reply || data.response || data.message || 'The assistant returned an empty response.';
 }
