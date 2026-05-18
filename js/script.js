@@ -82,7 +82,8 @@ const chatStatusDot = document.querySelector('#chat-status-dot');
 const chatStatusText = document.querySelector('#chat-status-text');
 // const CHAT_API_URL = 'http://127.0.0.1:8000/chats';
 const CHAT_API_URL = 'https://personal-chatbot-api-cdht.onrender.com/chats';
-const CHAT_HEALTH_URL = new URL('/health', CHAT_API_URL).toString();
+const CHAT_API_BASE_URL = new URL(CHAT_API_URL).origin;
+const CHAT_HEALTH_URL = `${CHAT_API_BASE_URL}/health`;
 const CHAT_STORAGE_KEY = 'portfolio_chat_messages';
 const CHAT_USER_ID_KEY = 'portfolio_chat_user_id';
 const legacyBotGreeting = 'Hi, I can help visitors learn about your work. Hook me to your API later and I will become fully functional.';
@@ -194,8 +195,17 @@ async function checkChatbotStatus() {
             throw new Error(`Health check failed with status ${response.status}`);
         }
 
-        const data = await response.json();
-        const isOnline = data.status === 'ok';
+        const rawBody = await response.text();
+        let data = null;
+
+        try {
+            data = rawBody ? JSON.parse(rawBody) : null;
+        } catch (parseError) {
+            console.warn('Health check returned non-JSON response:', parseError);
+        }
+
+        const normalizedStatus = String(data?.status || '').toLowerCase();
+        const isOnline = !data || normalizedStatus === 'ok' || normalizedStatus === 'online' || normalizedStatus === 'healthy';
 
         setChatStatus(isOnline ? 'online' : 'offline', isOnline ? 'Online' : 'Offline');
         return isOnline;
@@ -238,6 +248,7 @@ async function getChatbotReply(query) {
     }
 
     const data = await response.json();
+    setChatStatus('online', 'Online');
 
     return data.reply || data.response || data.message || 'The assistant returned an empty response.';
 }
