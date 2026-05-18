@@ -88,7 +88,10 @@ const CHAT_STORAGE_KEY = 'portfolio_chat_messages';
 const CHAT_USER_ID_KEY = 'portfolio_chat_user_id';
 const legacyBotGreeting = 'Hi, I can help visitors learn about your work. Hook me to your API later and I will become fully functional.';
 const defaultBotGreeting = "Hi, I'm Sumit's AI assistant. Ask me about his skills, projects, experience, or how he builds AI systems.";
+const CHAT_STATUS_POLL_INTERVAL = 30000;
+const CHAT_STATUS_FAILURE_THRESHOLD = 3;
 let chatStatusIntervalId = null;
+let failedChatHealthChecks = 0;
 
 function getOrCreateChatUserId() {
     let userId = localStorage.getItem(CHAT_USER_ID_KEY);
@@ -184,7 +187,9 @@ async function checkChatbotStatus() {
         return false;
     }
 
-    setChatStatus('checking', 'Checking status...');
+    if (failedChatHealthChecks === 0) {
+        setChatStatus('checking', 'Checking status...');
+    }
 
     try {
         const response = await fetch(CHAT_HEALTH_URL, {
@@ -207,11 +212,19 @@ async function checkChatbotStatus() {
         const normalizedStatus = String(data?.status || '').toLowerCase();
         const isOnline = !data || normalizedStatus === 'ok' || normalizedStatus === 'online' || normalizedStatus === 'healthy';
 
+        failedChatHealthChecks = 0;
         setChatStatus(isOnline ? 'online' : 'offline', isOnline ? 'Online' : 'Offline');
         return isOnline;
     } catch (error) {
         console.error('Chat health check failed:', error);
-        setChatStatus('offline', 'Offline');
+        failedChatHealthChecks += 1;
+
+        if (failedChatHealthChecks >= CHAT_STATUS_FAILURE_THRESHOLD) {
+            setChatStatus('offline', 'Offline');
+        } else {
+            setChatStatus('checking', 'Reconnecting...');
+        }
+
         return false;
     }
 }
@@ -222,7 +235,7 @@ function startChatStatusPolling() {
     }
 
     checkChatbotStatus();
-    chatStatusIntervalId = window.setInterval(checkChatbotStatus, 15000);
+    chatStatusIntervalId = window.setInterval(checkChatbotStatus, CHAT_STATUS_POLL_INTERVAL);
 }
 
 async function getChatbotReply(query) {
@@ -248,6 +261,7 @@ async function getChatbotReply(query) {
     }
 
     const data = await response.json();
+    failedChatHealthChecks = 0;
     setChatStatus('online', 'Online');
 
     return data.reply || data.response || data.message || 'The assistant returned an empty response.';
