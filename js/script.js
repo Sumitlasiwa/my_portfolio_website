@@ -89,12 +89,11 @@ const CHAT_USER_ID_KEY = 'portfolio_chat_user_id';
 const legacyBotGreeting = 'Hi, I can help visitors learn about your work. Hook me to your API later and I will become fully functional.';
 const defaultBotGreeting = "Hi, I'm Sumit's AI assistant. Ask me about his skills, projects, experience, or how he builds AI systems.";
 const CHAT_STATUS_POLL_INTERVAL = 30000;
-const CHAT_STATUS_FAILURE_THRESHOLD = 3;
-const CHAT_STATUS_ONLINE_GRACE_PERIOD = 5 * 60 * 1000;
+const CHAT_STATUS_FAILURE_THRESHOLD = 2;
+const CHAT_STATUS_REQUEST_TIMEOUT = 10000;
 let chatStatusIntervalId = null;
 let failedChatHealthChecks = 0;
 let hasConfirmedChatOnline = false;
-let lastSuccessfulChatContactAt = 0;
 
 function getOrCreateChatUserId() {
     let userId = localStorage.getItem(CHAT_USER_ID_KEY);
@@ -187,7 +186,6 @@ function setChatStatus(state, label) {
 function markChatOnline() {
     failedChatHealthChecks = 0;
     hasConfirmedChatOnline = true;
-    lastSuccessfulChatContactAt = Date.now();
     setChatStatus('online', 'Online');
 }
 
@@ -198,9 +196,13 @@ async function checkChatbotStatus() {
     }
 
     try {
+        const controller = new AbortController();
+        const timeoutId = window.setTimeout(() => controller.abort(), CHAT_STATUS_REQUEST_TIMEOUT);
         const response = await fetch(CHAT_HEALTH_URL, {
-            method: 'GET'
+            method: 'GET',
+            signal: controller.signal
         });
+        window.clearTimeout(timeoutId);
 
         if (!response.ok) {
             throw new Error(`Health check failed with status ${response.status}`);
@@ -229,12 +231,8 @@ async function checkChatbotStatus() {
     } catch (error) {
         console.error('Chat health check failed:', error);
         failedChatHealthChecks += 1;
-        const withinOnlineGracePeriod = hasConfirmedChatOnline
-            && Date.now() - lastSuccessfulChatContactAt < CHAT_STATUS_ONLINE_GRACE_PERIOD;
 
-        if (withinOnlineGracePeriod) {
-            setChatStatus('online', 'Online');
-        } else if (failedChatHealthChecks >= CHAT_STATUS_FAILURE_THRESHOLD) {
+        if (failedChatHealthChecks >= CHAT_STATUS_FAILURE_THRESHOLD) {
             hasConfirmedChatOnline = false;
             setChatStatus('offline', 'Offline');
         } else if (!hasConfirmedChatOnline) {
